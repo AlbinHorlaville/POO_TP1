@@ -10,8 +10,10 @@ abstract class Chambre {
     }
 
     public String toString(){
-        return "   prix : " + this.prix + "\n";
+        return " * Chambre : " + this.getType() + " \n" + "   prix : " + this.prix + "\n";
     }
+
+    abstract public String getType();
 }
 
 class ChambreSimple extends Chambre {
@@ -20,9 +22,9 @@ class ChambreSimple extends Chambre {
         this.prix = prix;
     }
 
-    public String toString(){
-        String resultat = super.toString();
-        return " * Chambre : Simple \n" + resultat;
+    @Override
+    public String getType(){
+        return "Simple";
     }
 }
 
@@ -32,9 +34,9 @@ class ChambreDouble extends Chambre {
         this.prix = prix;
     }
 
-    public String toString(){
-        String resultat = super.toString();
-        return " * Chambre : Double \n" + resultat;
+    @Override
+    public String getType(){
+        return "Double";
     }
 }
 
@@ -44,8 +46,8 @@ class ChambreSuite extends Chambre {
         this.prix = prix;
     }
 
-    public String toString(){
-        String resultat = super.toString();
-        return " * Chambre : Suite \n" + resultat;
+    @Override
+    public String getType(){
+        return "Suite";
     }
 }

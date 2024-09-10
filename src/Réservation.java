@@ -11,7 +11,9 @@ public class Réservation {
         this.dateArrivée = dateA;
         this.dateDépart = dateD;
         this.client = client;
+        this.client.ajouterRéservation(this);
         this.hébergement = hébergement;
+        this.hébergement.ajouterRéservation(this);
         this.chambre = chambre;
     }
 
@@ -28,6 +30,6 @@ public class Réservation {
                "  LocalDate de départ : " + this.dateDépart + "\n" +
                "  Client : " + this.client.nom + "\n" +
                "  Hébergement : " + this.hébergement.nom + "\n" +
-               "  Chambre = " + this.chambre.getClass().toString() + "\n";
+               "  Chambre : " + this.chambre.getType() + "\n";
     }
 }

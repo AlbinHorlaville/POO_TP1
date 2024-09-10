@@ -5,9 +5,17 @@ import java.util.Iterator;
 abstract class Hébergement {
     String nom;
     String adresse;
-    ArrayList<String> services;
-    ArrayList<Réservation> réservations;
-    ArrayList<Chambre> chambres;
+    private ArrayList<String> services;
+    private ArrayList<Réservation> réservations;
+    private ArrayList<Chambre> chambres;
+
+    Hébergement(String nom, String adresse, ArrayList<String> services){
+        this.nom = nom;
+        this.adresse = adresse;
+        this.services = services;
+        this.réservations = new ArrayList<Réservation>();
+        this.chambres = new ArrayList<Chambre>();
+    }
 
     Hébergement(String nom, String adresse, ArrayList<String> services, ArrayList<Chambre> chambres){
         this.nom = nom;
@@ -33,13 +41,63 @@ abstract class Hébergement {
         this.réservations.remove(réservation);
     }
 
+    void ajouterChambre(Chambre chambre){
+        this.chambres.add(chambre);
+    }
+
+    void supprimerChambre(Chambre chambre){
+        this.chambres.remove(chambre);
+    }
+
+    Chambre getChambre(int index){
+        return this.chambres.get(index);
+    }
+
+    Réservation getRéservation(int index){
+        return this.réservations.get(index);
+    }
+
+    ArrayList<Réservation> getRéservations(){
+        return this.réservations;
+    }
+
     /*
      * trouverChambre
      * Retourne une chambre de l'hôtel qui correspond au paramêtres
      * Si aucune chambre ne correspond aux critères, renvoie null
      */
-    Chambre trouverChambre(Class<Chambre> typeChambre, LocalDate dateArrivée, LocalDate dateDépart, int prixMax){
-        return null;
+    Chambre trouverChambre(String typeChambre, LocalDate dateArrivée, LocalDate dateDépart, int prixMax){
+        // Parcours des chambres : quand une correspond aux critères, on vérifie sa disponibilité en parcourant les réservations
+        for (Chambre chambre : this.chambres){
+            if (!(chambre.getType().equals(typeChambre) && chambre.getPrix() <= prixMax)){
+                continue;
+            }
+            boolean verified = true;
+            for (Réservation réservation : this.réservations){
+                if (chambre!=réservation.chambre){
+                    continue;
+                }
+                LocalDate dateArrivéeRéservation = réservation.getDateArrivée();
+                LocalDate dateDépartRéservation = réservation.getDateDépart();
+                // Si les dates chevauchent celles d'une réservation, on passe à la prochaine chambre
+                if (dateArrivée.isBefore(dateArrivéeRéservation) && dateDépart.isAfter(dateDépartRéservation)){
+                    verified = false;
+                    break;
+                }
+                if (dateArrivée.isEqual(dateArrivéeRéservation) || (dateArrivée.isAfter(dateArrivéeRéservation) && dateArrivée.isBefore(dateDépartRéservation))){
+                    verified = false;
+                    break;
+                }
+                if (dateDépart.isEqual(dateDépartRéservation) || (dateDépart.isAfter(dateArrivéeRéservation) && dateDépart.isBefore(dateDépartRéservation))){
+                    verified = false;
+                    break;
+                }
+            }
+            if (verified){
+                return chambre;
+            }
+        }
+        return null; // 0 chambres ou toutes complètes ou ne correspondent pas aux critères
     }
 
     int getNombreChambreSimple(){
@@ -80,6 +138,7 @@ abstract class Hébergement {
 
     public String toString(){
         String resultat = new String();
+        resultat += "Hébergement : " + this.getType() + " \n";
         // Nom
         resultat = "Nom : " + this.nom + "\n";
 
@@ -92,7 +151,8 @@ abstract class Hébergement {
             concatServices += s + ", ";
         }
         if (!concatServices.equals("")){
-            concatServices.substring(0, concatServices.length()-2);
+            concatServices = concatServices.substring(0, concatServices.length()-2);
+            
         }
         resultat += "Services : " + concatServices + "\n";
 
@@ -111,7 +171,7 @@ abstract class Hébergement {
         if (this.réservations.size()==0){
             resultat += "  0 réservations. \n";
         }else{
-            int i = 0;
+            int i = 1;
             for (Réservation c : this.réservations){
                 resultat += "* Chambre n°" + Integer.toString(i) + ": \n";
                 resultat += c.toString();
@@ -120,9 +180,15 @@ abstract class Hébergement {
 
         return resultat;
     }
+
+    abstract public String getType();
 }
 
 class Hôtel extends Hébergement{
+    Hôtel(String nom, String adresse, ArrayList<String> services){
+        super(nom, adresse, services);
+    }
+
     Hôtel(String nom, String adresse, ArrayList<String> services, ArrayList<Chambre> chambres){
         super(nom, adresse, services, chambres);
     }
@@ -131,13 +197,17 @@ class Hôtel extends Hébergement{
         super(nom, adresse, services, réservations, chambres);
     }
 
-    public String toString(){
-        String resultat = ((Hébergement)this).toString();
-        return "Hébergement : Hôtel \n" + resultat;
+    @Override
+    public String getType(){
+        return "Hôtel";
     }
 }
 
 class Motel extends Hébergement{
+    Motel(String nom, String adresse, ArrayList<String> services){
+        super(nom, adresse, services);
+    }
+
     Motel(String nom, String adresse, ArrayList<String> services, ArrayList<Chambre> chambres){
         super(nom, adresse, services, chambres);
     }
@@ -146,13 +216,17 @@ class Motel extends Hébergement{
         super(nom, adresse, services, réservations, chambres);
     }
 
-    public String toString(){
-        String resultat = ((Hébergement)this).toString();
-        return "Hébergement : Motel \n" + resultat;
+    @Override
+    public String getType(){
+        return "Motel";
     }
 }
 
 class CouetteEtCaffe extends Hébergement{
+    CouetteEtCaffe(String nom, String adresse, ArrayList<String> services){
+        super(nom, adresse, services);
+    }
+
     CouetteEtCaffe(String nom, String adresse, ArrayList<String> services, ArrayList<Chambre> chambres){
         super(nom, adresse, services, chambres);
     }
@@ -161,8 +235,8 @@ class CouetteEtCaffe extends Hébergement{
         super(nom, adresse, services, réservations, chambres);
     }
 
-    public String toString(){
-        String resultat = ((Hébergement)this).toString();
-        return "Hébergement : Couette & Caffé \n" + resultat;
+    @Override
+    public String getType(){
+        return "Couette & Caffé";
     }
 }

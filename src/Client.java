@@ -15,6 +15,14 @@ public class Client {
         this.réservations = new ArrayList<Réservation>();
     }
 
+    Réservation getRéservation(int index){
+        return this.réservations.get(index);
+    }
+
+    ArrayList<Réservation> getRéservations(){
+        return this.réservations;
+    }
+
     void ajouterRéservation(Réservation réservation){
         this.réservations.add(réservation);
     }
