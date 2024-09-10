@@ -21,7 +21,7 @@ class ChambreSimple extends Chambre {
     }
 
     public String toString(){
-        String resultat = ((Chambre)this).toString();
+        String resultat = super.toString();
         return " * Chambre : Simple \n" + resultat;
     }
 }
@@ -33,7 +33,7 @@ class ChambreDouble extends Chambre {
     }
 
     public String toString(){
-        String resultat = ((Chambre)this).toString();
+        String resultat = super.toString();
         return " * Chambre : Double \n" + resultat;
     }
 }
@@ -45,7 +45,7 @@ class ChambreSuite extends Chambre {
     }
 
     public String toString(){
-        String resultat = ((Chambre)this).toString();
+        String resultat = super.toString();
         return " * Chambre : Suite \n" + resultat;
     }
 }

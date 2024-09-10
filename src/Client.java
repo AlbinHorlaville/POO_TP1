@@ -7,11 +7,11 @@ public class Client {
     String numTéléphone;
     private ArrayList<Réservation> réservations;
 
-    Client(String n, String a, String c, String numT){
-        this.nom = n;
-        this.adresse = a;
-        this.courriel = c;
-        this.numTéléphone = numT;
+    Client(String nom, String adresse, String courriel, String numTéléphone){
+        this.nom = nom;
+        this.adresse = adresse;
+        this.courriel = courriel;
+        this.numTéléphone = numTéléphone;
         this.réservations = new ArrayList<Réservation>();
     }
 

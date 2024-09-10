@@ -1,5 +1,5 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 abstract class Hébergement {
@@ -38,7 +38,7 @@ abstract class Hébergement {
      * Retourne une chambre de l'hôtel qui correspond au paramêtres
      * Si aucune chambre ne correspond aux critères, renvoie null
      */
-    Chambre trouverChambre(Class<Chambre> typeChambre, Date dateArrivée, Date dateDépart, int prixMax){
+    Chambre trouverChambre(Class<Chambre> typeChambre, LocalDate dateArrivée, LocalDate dateDépart, int prixMax){
         return null;
     }
 

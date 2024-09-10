@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Test",
+            "request": "launch",
+            "mainClass": "Test",
+            "projectName": "TP1_f3764b46",
+            "vmArgs": "-enableassertions"
+        }
+    ]
+}
