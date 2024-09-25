@@ -2,27 +2,32 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class SystemeGestionReservationsImpl implements SystemeGestionReservations {
-    ArrayList<Hébergement> hébergements;
+    ArrayList<Hebergement> hebergements;
     ArrayList<Client> clients;
 
+    SystemeGestionReservationsImpl(){
+        this.hebergements = new ArrayList<Hebergement>();
+        this.clients = new ArrayList<Client>();
+    }
+
     @Override
-    public void nouveauClient(String nom, String adresse, String courriel, String numTéléphone) {
-        Client client = new Client(nom, adresse, courriel, numTéléphone);
+    public void nouveauClient(String nom, String adresse, String courriel, String numTelephone) {
+        Client client = new Client(nom, adresse, courriel, numTelephone);
         this.clients.add(client);
     }
 
     @Override
-    public void nouveauHébergement(String typeHébergement, String nom, String adresse, String services) {
+    public void nouveauHébergement(String typeHebergement, String nom, String adresse, String services) {
         // Transformer services en ArrayList
         ArrayList<String> servicesArray = new ArrayList<String>();
         String[] servicesSplited = services.split(", ");
         for (String s : servicesSplited){
             servicesArray.add(s);
         }
-        Hébergement hébergement;
-        switch(typeHébergement){
-            case "Hôtel":
-                hébergement = new Hôtel(nom, adresse, servicesArray);
+        Hebergement hébergement;
+        switch(typeHebergement){
+            case "Hotel":
+                hébergement = new Hotel(nom, adresse, servicesArray);
                 break;
             case "Motel":
                 hébergement = new Motel(nom, adresse, servicesArray);
@@ -31,47 +36,41 @@ public class SystemeGestionReservationsImpl implements SystemeGestionReservation
                 hébergement = new CouetteEtCaffe(nom, adresse, servicesArray);
                 break;
             default:
-                System.out.println("Erreur, type d'Hébergement inconnu, fichier SystemGestionReservationsImpl");
+                System.out.println("Erreur, type d'Hebergement inconnu, fichier SystemGestionReservationsImpl");
                 return;
         }
-        this.hébergements.add(hébergement);
+        this.hebergements.add(hébergement);
     }
 
     @Override
-    public void nouvelleChambre(int prix, String typeChambre, Hébergement hébergement) {
-        Chambre chambre;
-        switch(typeChambre){
-            case "Simple":
-                chambre = new ChambreSimple(prix);
-                break;
-            case "Double":
-                chambre = new ChambreDouble(prix);
-                break;
-            case "Suite":
-                chambre = new ChambreSuite(prix);
-                break;
-            default:
-            System.out.println("Erreur, type de chambre inconnu, fichier SystemGestionReservationsImpl");
-            return;
-        }
-        hébergement.ajouterChambre(chambre);
+    public void nouvelleChambre(int prix, String typeChambre, Hebergement hébergement) {
+        hébergement.ajouterChambre(typeChambre, prix);
     }
 
     @Override
-    public void supprimerChambre(int index, Hébergement hébergement) {
+    public void supprimerChambre(int index, Hebergement hébergement) {
         hébergement.supprimerChambre(hébergement.getChambre(index));
     }
 
     @Override
-    public void réserver(LocalDate dateA, LocalDate dateD, Client client, Hébergement hébergement, Chambre chambre) {
-        new Réservation(dateA, dateD, client, hébergement, chambre);
+    public void réserver(LocalDate dateA, LocalDate dateD, Client client, Chambre chambre) {
+        new Réservation(dateA, dateD, client, chambre.hébergement, chambre);
     }
 
     @Override
-    public void annulerRéservation(Client client, int indexRéservation, Hébergement hébergement) {
-        Réservation réservation = client.getRéservation(indexRéservation);
-        client.annulerRéservation(réservation);
-        hébergement.annulerRéservation(réservation);
+    public void annulerRéservation(Réservation reservation) {
+        reservation.client.annulerRéservation(reservation);
+        reservation.hébergement.annulerRéservation(reservation);
+    }
+
+    @Override
+    public Hebergement getHebergementByName(String nom){
+        for (Hebergement h : this.hebergements){
+            if (h.nom.equals(nom)){
+                return h;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -80,16 +79,28 @@ public class SystemeGestionReservationsImpl implements SystemeGestionReservation
     }
 
     @Override
-    public ArrayList<Réservation> getRéservations(Hébergement hébergement) {
+    public ArrayList<Réservation> getRéservations(Hebergement hébergement) {
         return hébergement.getRéservations();
     }
 
     @Override
-    public ArrayList<Chambre> trouverLesMeilleursChambres(String typeHébergement, String adresse, String typeChambre,
+    public ArrayList<Chambre> trouverLesMeilleursChambres(String typeHebergement, String adresse, String typeChambre,
             String services, LocalDate dateArrivée, LocalDate dateDépart, int prixMax) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'trouverLesMeilleursChambres'");
         // Faire la liste de toutes les chambres éligibles et renvoyer le top 5 en triant par prix du moins chère au plus chère
+        ArrayList<Chambre> chambresÉligibles = new ArrayList<Chambre>();
+        for (Hebergement hébergement : this.hebergements){
+            if (!hébergement.getType().equals(typeHebergement) || !hébergement.adresse.equals(adresse)){
+                continue;
+            }
+            Chambre chambre = hébergement.trouverChambre(typeChambre, dateArrivée, dateDépart, prixMax);
+            if (chambre!=null){
+                chambresÉligibles.add(chambre);
+            }
+        }
+        chambresÉligibles.sort(new ChambreComparator());
+        while (chambresÉligibles.size()>5){
+            chambresÉligibles.remove(chambresÉligibles.size()-1);
+        }
+        return chambresÉligibles;
     }
-    
 }

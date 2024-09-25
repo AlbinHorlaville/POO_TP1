@@ -4,10 +4,10 @@ public class Réservation {
     private LocalDate dateArrivée;
     private LocalDate dateDépart;
     Client client;
-    Hébergement hébergement;
+    Hebergement hébergement;
     Chambre chambre;
 
-    Réservation(LocalDate dateA, LocalDate dateD, Client client, Hébergement hébergement, Chambre chambre){
+    Réservation(LocalDate dateA, LocalDate dateD, Client client, Hebergement hébergement, Chambre chambre){
         this.dateArrivée = dateA;
         this.dateDépart = dateD;
         this.client = client;
@@ -29,7 +29,7 @@ public class Réservation {
         return "  LocalDate d'arrivée : " + this.dateArrivée + "\n" + 
                "  LocalDate de départ : " + this.dateDépart + "\n" +
                "  Client : " + this.client.nom + "\n" +
-               "  Hébergement : " + this.hébergement.nom + "\n" +
+               "  Hebergement : " + this.hébergement.nom + "\n" +
                "  Chambre : " + this.chambre.getType() + "\n";
     }
 }

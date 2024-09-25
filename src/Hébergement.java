@@ -2,14 +2,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-abstract class Hébergement {
+abstract class Hebergement {
     String nom;
     String adresse;
     private ArrayList<String> services;
     private ArrayList<Réservation> réservations;
     private ArrayList<Chambre> chambres;
 
-    Hébergement(String nom, String adresse, ArrayList<String> services){
+    Hebergement(String nom, String adresse, ArrayList<String> services){
         this.nom = nom;
         this.adresse = adresse;
         this.services = services;
@@ -17,7 +17,7 @@ abstract class Hébergement {
         this.chambres = new ArrayList<Chambre>();
     }
 
-    Hébergement(String nom, String adresse, ArrayList<String> services, ArrayList<Chambre> chambres){
+    Hebergement(String nom, String adresse, ArrayList<String> services, ArrayList<Chambre> chambres){
         this.nom = nom;
         this.adresse = adresse;
         this.services = services;
@@ -25,7 +25,7 @@ abstract class Hébergement {
         this.chambres = chambres;
     }
 
-    Hébergement(String nom, String adresse, ArrayList<String> services, ArrayList<Réservation> réservations, ArrayList<Chambre> chambres){
+    Hebergement(String nom, String adresse, ArrayList<String> services, ArrayList<Réservation> réservations, ArrayList<Chambre> chambres){
         this.nom = nom;
         this.adresse = adresse;
         this.services = services;
@@ -41,7 +41,22 @@ abstract class Hébergement {
         this.réservations.remove(réservation);
     }
 
-    void ajouterChambre(Chambre chambre){
+    void ajouterChambre(String typeChambre, int prix){
+        Chambre chambre;
+        switch(typeChambre){
+            case "Simple":
+                chambre = new ChambreSimple(this, prix);
+                break;
+            case "Double":
+                chambre = new ChambreDouble(this, prix);
+                break;
+            case "Suite":
+                chambre = new ChambreSuite(this, prix);
+                break;
+            default:
+                System.out.println("Erreur, type de Chambre inconnu");
+                return;
+        }
         this.chambres.add(chambre);
     }
 
@@ -138,7 +153,7 @@ abstract class Hébergement {
 
     public String toString(){
         String resultat = new String();
-        resultat += "Hébergement : " + this.getType() + " \n";
+        resultat += "Hebergement : " + this.getType() + " \n";
         // Nom
         resultat = "Nom : " + this.nom + "\n";
 
@@ -184,26 +199,26 @@ abstract class Hébergement {
     abstract public String getType();
 }
 
-class Hôtel extends Hébergement{
-    Hôtel(String nom, String adresse, ArrayList<String> services){
+class Hotel extends Hebergement{
+    Hotel(String nom, String adresse, ArrayList<String> services){
         super(nom, adresse, services);
     }
 
-    Hôtel(String nom, String adresse, ArrayList<String> services, ArrayList<Chambre> chambres){
+    Hotel(String nom, String adresse, ArrayList<String> services, ArrayList<Chambre> chambres){
         super(nom, adresse, services, chambres);
     }
 
-    Hôtel(String nom, String adresse, ArrayList<String> services, ArrayList<Réservation> réservations, ArrayList<Chambre> chambres){
+    Hotel(String nom, String adresse, ArrayList<String> services, ArrayList<Réservation> réservations, ArrayList<Chambre> chambres){
         super(nom, adresse, services, réservations, chambres);
     }
 
     @Override
     public String getType(){
-        return "Hôtel";
+        return "Hotel";
     }
 }
 
-class Motel extends Hébergement{
+class Motel extends Hebergement{
     Motel(String nom, String adresse, ArrayList<String> services){
         super(nom, adresse, services);
     }
@@ -222,7 +237,7 @@ class Motel extends Hébergement{
     }
 }
 
-class CouetteEtCaffe extends Hébergement{
+class CouetteEtCaffe extends Hebergement{
     CouetteEtCaffe(String nom, String adresse, ArrayList<String> services){
         super(nom, adresse, services);
     }

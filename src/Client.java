@@ -4,14 +4,14 @@ public class Client {
     String nom;
     String adresse;
     String courriel;
-    String numTéléphone;
+    String numTelephone;
     private ArrayList<Réservation> réservations;
 
-    Client(String nom, String adresse, String courriel, String numTéléphone){
+    Client(String nom, String adresse, String courriel, String numTelephone){
         this.nom = nom;
         this.adresse = adresse;
         this.courriel = courriel;
-        this.numTéléphone = numTéléphone;
+        this.numTelephone = numTelephone;
         this.réservations = new ArrayList<Réservation>();
     }
 
@@ -35,7 +35,7 @@ public class Client {
         return "Nom : " + this.nom + "\n" +
                "Adresse : " + this.adresse + "\n" +
                "Courriel : " + this.courriel + "\n" +
-               "Téléphone : " + this.numTéléphone + "\n" +
+               "Téléphone : " + this.numTelephone + "\n" +
                "Nombre de réservations : " + Integer.toString(réservations.size()) + "\n";
     }
 }
