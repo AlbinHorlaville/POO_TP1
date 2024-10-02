@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 
-public class Réservation {
+public class Réservation implements java.io.Serializable{
     private LocalDate dateArrivée;
     private LocalDate dateDépart;
     Client client;
@@ -26,8 +26,8 @@ public class Réservation {
     }
 
     public String toString(){
-        return "  LocalDate d'arrivée : " + this.dateArrivée + "\n" + 
-               "  LocalDate de départ : " + this.dateDépart + "\n" +
+        return "  Date d'arrivée : " + this.dateArrivée + "\n" + 
+               "  Date de départ : " + this.dateDépart + "\n" +
                "  Client : " + this.client.nom + "\n" +
                "  Hebergement : " + this.hébergement.nom + "\n" +
                "  Chambre : " + this.chambre.getType() + "\n";

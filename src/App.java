@@ -1,14 +1,57 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.FileNotFoundException;
 
 public class App {
+    /*
+     * Sauvegarde dans un fichier les données entre deux sessions.
+     */
+    static void serialize(Serializable obj){
+        try {
+            FileOutputStream fileOut = new FileOutputStream("tmp/data.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(obj);
+            out.close();
+            fileOut.close();
+            System.out.printf("Serialized data is saved in /tmp/data.ser");
+         } catch (IOException i) {
+            i.printStackTrace();
+         }
+    }
+    /*
+     * Charge les données depuis un fichier au début de la session, si vide alors créer un gestionnaire
+     */
+    static SystemeGestionReservationsImpl getGestionnaire(){
+        SystemeGestionReservationsImpl g = null;
+        try {
+           FileInputStream fileIn = new FileInputStream("tmp/data.ser");
+           ObjectInputStream in = new ObjectInputStream(fileIn);
+           g = (SystemeGestionReservationsImpl) in.readObject();
+           in.close();
+           fileIn.close();
+        } catch (FileNotFoundException i) {
+           g = new SystemeGestionReservationsImpl();
+        } catch (Exception c) {
+           System.out.println("Error Occured");
+           c.printStackTrace();
+           return null;
+        }
+        return g;
+    }
+
     public static void main(String[] args) throws Exception {
         System.out.println("*** Gestionnaire de réservation de Apafi NiDévoyager ***");
         
         Scanner inputScanner = new Scanner(System.in);
 
-        SystemeGestionReservationsImpl gestionnaire = new SystemeGestionReservationsImpl();
+        SystemeGestionReservationsImpl gestionnaire = getGestionnaire();
 
         Client client = null; // Sauvegarde du client dans la session
         String typeHebergementReservation = "";
@@ -226,7 +269,7 @@ public class App {
                     typeChambreReservation = inputScanner.nextLine();
                     System.out.println("Entrer les services voulus :");
                     servicesReservation = inputScanner.nextLine();
-                    System.out.println("Tapper le prix macimum :");
+                    System.out.println("Tapper le prix maximum :");
                     prixMaxReservation = inputScanner.nextInt();
                     inputScanner.nextLine();
                     state = State.CHOIX_CHAMBRE;
@@ -284,6 +327,8 @@ public class App {
                     return;
             }
         }
+        // Serialize data before quit
+        serialize(gestionnaire);
         inputScanner.close();
     }
 }

@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class SystemeGestionReservationsImpl implements SystemeGestionReservations {
+public class SystemeGestionReservationsImpl implements SystemeGestionReservations, java.io.Serializable {
     ArrayList<Hebergement> hebergements;
     ArrayList<Client> clients;
 

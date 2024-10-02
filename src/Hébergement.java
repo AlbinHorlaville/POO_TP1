@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-abstract class Hebergement {
+abstract class Hebergement implements java.io.Serializable{
     String nom;
     String adresse;
     private ArrayList<String> services;

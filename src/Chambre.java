@@ -1,6 +1,6 @@
 import java.util.Comparator;
 
-abstract class Chambre {
+abstract class Chambre implements java.io.Serializable{
     protected int prix;
     Hebergement hébergement;
 
